@@ -19,31 +19,51 @@ class HMMFilter:
     # sensorR is the sensor reading (index!), self._f is the probability distribution resulting from the filtering    
     def filter(self, sensorR : int) -> np.array : # Takes the sensor reading in the form of an index
         # Implementation of simple forward filtering algorithm for one sensor reading (finding f_1:i)
-        # If the reading is None
-        #if sensorR is not None:
-        O_i = self.__om.get_o_reading(sensorR)
-        
-        T_matrix = self.__tm.get_T()
-        
+        O_i = self.__om.get_o_reading(sensorR)        
+        T_matrix = self.__tm.get_T()        
         f_updated = O_i @ np.transpose(T_matrix) @ self.__f
         f_updated = f_updated / np.sum(f_updated)
         self.__f = f_updated
         
         return self.__f
-
-
-class HMMSmoother:
-    
+        
+class HMMSmoother:    
     def __init__(self, tm, om, sm):
         self.__tm = tm
         self.__om = om
         self.__sm = sm
 
     # sensor_r_seq is the sequence (array) with the t-k sensor readings for smoothing, 
-    # f_k is the filtered result (f_vector) for step k
-    # fb is the smoothed result (fb_vector)
+    # f_k is the filtered result (f_vector) for step k: (f 1:k)
+    # fb = P(Sk | o 1:i) = alpha * f 1:k * b k+1:i
+    # fb is the smoothed result (fb_vector).
+    
     def smooth(self, sensor_r_seq : np.array, f_k : np.array) -> np.array:
-        fb = self.__f # setting a dummy value here...
-        # somehow compute fb to be better than f ;-)
-        # ...
+        size_b =  f_k.size
+        b = np.ones(size_b)
+        
+        T_matrix = self.__tm.get_T()  
+        # print(T_matrix.shape)
+        print(b)
+        for i in range(len(sensor_r_seq), -1, -1):
+            O_i = self.__om.get_o_reading(sensor_r_seq[i])    
+            #print(O_i)
+            b = T_matrix @ O_i @ b
+            #print(b)
+        
+        #print(b)
+        #print(b.shape)
+        fb = f_k * b
+        #print(f_k.shape)
+        #print(np.sum(fb))
+        fb = fb / np.sum(fb)
+        
         return fb
+
+
+
+
+
+
+
+        

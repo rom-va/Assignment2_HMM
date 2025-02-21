@@ -60,7 +60,7 @@ class Localizer:
         self.__sense = None
         self.__probs = np.ones(self.__sm.get_num_of_states()) / (self.__sm.get_num_of_states()) 
         # The initital probability distribution is uniform!
-        # This means we don't have any information on the initial state}
+        # This means we don't have any information on the initial state
         
         self.__estimate = self.__sm.state_to_position(np.argmax(self.__probs))
 
