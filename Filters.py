@@ -40,30 +40,30 @@ class HMMSmoother:
     
     def smooth(self, sensor_r_seq : np.array, f_k : np.array) -> np.array:
         size_b =  f_k.size
-        print(f_k)
+        #print(f_k)
         b = np.ones(size_b)
-        print(b)
-        print(b.shape)
-        
-        T_matrix = self.__tm.get_T() 
-        print(T_matrix)
-        print(T_matrix.shape)
-
-        print("-- Smoothing iterations start")
-        for i in range(len(sensor_r_seq)-1, -1, -1):
-            O_i = self.__om.get_o_reading(sensor_r_seq[i])    
-            print("Oi")
-            print(O_i)
-            b = T_matrix @ O_i @ b
-            print("b")
-            print(b)
-            fb = f_k * b
-            fb = fb / np.sum(fb)
-        
         #print(b)
         #print(b.shape)
-        print(np.sum(fb))
-        print(fb)
+        
+        T_matrix = self.__tm.get_T() 
+        #print(T_matrix)
+        #print(T_matrix.shape)
+
+        #print("-- Smoothing iterations start")
+        for i in range(len(sensor_r_seq)-1, -1, -1):
+            O_i = self.__om.get_o_reading(sensor_r_seq[i])    
+            #print("Oi")
+            #print(O_i)
+            b = T_matrix @ O_i @ b
+            #print("b")
+            #print(b)
+
+        fb = f_k * b
+        fb = fb / np.sum(fb)
+        #print(b)
+        #print(b.shape)
+        #print(np.sum(fb))
+        #print(fb)
         return fb
 
 
